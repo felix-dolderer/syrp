@@ -34,9 +34,10 @@ class App extends Component {
       // example of interacting with the contract's methods.
       this.setState({ web3, accounts, contract: instance }, this.runExample);
 
+      const reputationNetwork = ReputationContract.networks[networkId];
       const reputationInstance = new web3.eth.Contract(
         ReputationContract.abi,
-        deployedNetwork && deployedNetwork.address
+        reputationNetwork && reputationNetwork.address
       );
       this.setState(
         { web3, accounts, reputationContract: reputationInstance },
@@ -77,7 +78,7 @@ class App extends Component {
       .name()
       .call()
       .then((name) => console.log(name));
-    const response = await reputationContract.methods.totalSupply().call();
+    const response = await reputationContract.methods.balanceOf('0x403aea99a8504b98bbfb3e04b8f6489460b75eb8').call();
 
     this.setState({ totalSupply: response });
   };
@@ -99,7 +100,7 @@ class App extends Component {
           Try changing the value stored on <strong>line 42</strong> of App.js.
         </p>
         <div>The stored value is: {this.state.storageValue}</div>
-        <div>The total supply is: {this.state.totalSupply}</div>
+        <div>The balance of '0x403aea99a8504b98bbfb3e04b8f6489460b75eb8' is: {this.state.totalSupply}</div>
       </div>
     );
   }
