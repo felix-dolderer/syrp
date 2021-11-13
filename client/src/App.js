@@ -1,11 +1,18 @@
 import React, { Component } from "react";
 import SimpleStorageContract from "./contracts/SimpleStorage.json";
+import ReputationContract from "./contracts/Reputation.json";
 import getWeb3 from "./getWeb3";
 
 import "./App.css";
 
 class App extends Component {
-  state = { storageValue: 0, web3: null, accounts: null, contract: null };
+  state = {
+    storageValue: 0,
+    web3: null,
+    accounts: null,
+    contract: null,
+    reputationContract: null,
+  };
 
   componentDidMount = async () => {
     try {
@@ -20,16 +27,25 @@ class App extends Component {
       const deployedNetwork = SimpleStorageContract.networks[networkId];
       const instance = new web3.eth.Contract(
         SimpleStorageContract.abi,
-        deployedNetwork && deployedNetwork.address,
+        deployedNetwork && deployedNetwork.address
       );
 
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
       this.setState({ web3, accounts, contract: instance }, this.runExample);
+
+      const reputationInstance = new web3.eth.Contract(
+        ReputationContract.abi,
+        deployedNetwork && deployedNetwork.address
+      );
+      this.setState(
+        { web3, accounts, reputationContract: reputationInstance },
+        this.runReputationExample
+      );
     } catch (error) {
       // Catch any errors for any of the above operations.
       alert(
-        `Failed to load web3, accounts, or contract. Check console for details.`,
+        `Failed to load web3, accounts, or contract. Check console for details.`
       );
       console.error(error);
     }
@@ -46,6 +62,24 @@ class App extends Component {
 
     // Update state with the result.
     this.setState({ storageValue: response });
+  };
+
+  runReputationExample = async () => {
+    const { accounts, reputationContract } = this.state;
+
+    await reputationContract.methods.set(5).send({ from: accounts[0] });
+
+    // Get the value from the contract to prove it worked.
+    const resp = await reputationContract.methods.get().call();
+    console.log(resp);
+
+    reputationContract.methods
+      .name()
+      .call()
+      .then((name) => console.log(name));
+    const response = await reputationContract.methods.totalSupply().call();
+
+    this.setState({ totalSupply: response });
   };
 
   render() {
@@ -65,6 +99,7 @@ class App extends Component {
           Try changing the value stored on <strong>line 42</strong> of App.js.
         </p>
         <div>The stored value is: {this.state.storageValue}</div>
+        <div>The total supply is: {this.state.totalSupply}</div>
       </div>
     );
   }
