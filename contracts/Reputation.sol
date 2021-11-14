@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.7.0 <0.9.0;
 
-import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "./AddrArrayLib.sol";
 
 struct CreditLine {
@@ -24,6 +24,8 @@ contract Reputation is ERC20 {
     mapping(address => AddrArrayLib.Addresses) private _pledges;
 
     mapping(address => mapping(address => CreditLine)) private _creditLineMap;
+
+    mapping(address => mapping(address => uint256)) private _trustScore;
 
     CreditLine[] private _creditLines;
 
@@ -64,6 +66,14 @@ contract Reputation is ERC20 {
         returns (CreditLine memory)
     {
         return _creditLineMap[owner][spender];
+    }
+
+    function getTrustScore(address from) public view returns(uint256 trustScore) {
+      return getTrustScore(from, msg.sender);
+    }
+
+    function getTrustScore(address from, address to) internal view returns (uint256 trustScore) {
+      return _trustScore[from][to];
     }
 
     /**
@@ -147,27 +157,35 @@ contract Reputation is ERC20 {
       return _creditLines;
     }
 
-    function repayCredit(address owner, uint256 repayment)
-        public
-        returns (bool)
-    {
-        return repayCredit(owner, msg.sender, repayment);
+    function repayCredit(address owner, uint256 repayment) public {
+        repayCredit(owner, msg.sender, repayment);
     }
 
     function repayCredit(
         address owner,
         address spender,
         uint256 repayment
-    ) internal returns (bool) {
+    ) internal returns (uint256) {
         CreditLine memory creditLine = _creditLineMap[owner][spender];
         uint256 newUsedCredit = creditLine.usedCredit - repayment;
 
-        require(newUsedCredit < creditLine.usedCredit);
+        require(repayment == creditLine.usedCredit, 'you must repay the full borrowed amount');
+        require(newUsedCredit < creditLine.usedCredit, 'the new used credit must be smaller, math error');
 
-        transferFrom(spender, owner, repayment);
-
+        transfer(owner, repayment);
         _creditLineMap[owner][spender].usedCredit = newUsedCredit;
+        _trustScore[owner][spender] +=1;
+        update(_creditLineMap[owner][spender]);
 
-        return true;
+        return newUsedCredit;
+    }
+
+    function update(CreditLine storage line) internal {
+      for ( uint j = 0; j < _creditLines.length; j++) {
+          if(_creditLines[j].owner == line.owner && _creditLines[j].spender == line.spender) {
+            _creditLines[j] = line;
+            return;
+          }
+        }
     }
 }
