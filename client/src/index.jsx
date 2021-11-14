@@ -7,10 +7,10 @@ import * as serviceWorker from "./serviceWorker";
 import "assets/scss/material-kit-react.scss?v=1.10.0";
 
 // pages for this product
-import Components from "views/Components/Components.js";
-import LandingPage from "views/LandingPage/LandingPage.js";
-import ProfilePage from "views/ProfilePage/ProfilePage.js";
-import LoginPage from "views/LoginPage/LoginPage.js";
+import Components from "views/Components/Components";
+import LandingPage from "views/LandingPage/LandingPage";
+import ProfilePage from "views/ProfilePage/ProfilePage";
+import LoginPage from "views/LoginPage/LoginPage";
 
 var hist = createBrowserHistory();
 

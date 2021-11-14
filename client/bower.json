@@ -5,7 +5,7 @@
     "creative-tim"
   ],
   "description": "A Badass Material-UI Kit based on Material Design",
-  "main": "dist/index.js",
+  "main": "dist/index.jsx",
   "keywords": [
     "material",
     "design",
