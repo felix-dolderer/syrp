@@ -12,7 +12,7 @@ While the underlying intention of making trust and reputation tangible is applic
 The contracts can be run via truffle in your local network.
 
 For this, install truffle (best globally) and start the development console (`truffle develop`).
-Install openzeppelin/contracts  - `npm install @openzeppelin/contracts` & for the tests `npm i truffle-assertions`
+Install openzeppelin/contracts  - `npm i @openzeppelin/contracts` & for the tests `npm i truffle-assertions`
 Now you are free to play with the contract locally. 
 With truffle running on your local network, go to the client directory and start the React app with `npm run start` to interact with the contract through our GUI. 
 
