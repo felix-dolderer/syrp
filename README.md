@@ -19,3 +19,21 @@ With truffle running on your local network, go to the client directory and start
 #### Tests
 In the truffle console, run `test`.
 Feel free to dive into the tests scenarios to get an understanding of the desired behaviour.
+
+## Repository Structure
+### Backend
+Consists of Ethereum smart contracts written in Solidity.
+
+Folders: contracts & migrations
+
+### Mockup for Showcase
+A simple html-based mockup for a showcase
+
+Folders: mockup
+
+### Frontend
+A frontend in Vue.js.
+
+Folders: src
+
+*Frontend still under heavy development*
