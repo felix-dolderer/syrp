@@ -15,6 +15,7 @@ import Button from "components/CustomButtons/Button";
 import Parallax from "components/Parallax/Parallax";
 // sections for this page
 import HeaderLinks from "components/Header/HeaderLinks";
+import SectionWeb3Demo from "./Sections/SectionWeb3Demo";
 import SectionBasics from "./Sections/SectionBasics";
 import SectionNavbars from "./Sections/SectionNavbars";
 import SectionTabs from "./Sections/SectionTabs";
@@ -64,6 +65,7 @@ export default function Components(props) {
       </Parallax>
 
       <div className={classNames(classes.main, classes.mainRaised)}>
+        <SectionWeb3Demo />
         <SectionBasics />
         <SectionNavbars />
         <SectionTabs />
